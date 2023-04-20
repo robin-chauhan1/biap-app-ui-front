@@ -5,7 +5,7 @@ import Button from "../../../shared/button/button";
 import { ONDC_COLORS } from "../../../shared/colors";
 import {
   checkout_steps,
-  get_current_step,
+  get_current_step
 } from "../../../../constants/checkout-steps";
 import Checkmark from "../../../shared/svg/checkmark";
 import Loading from "../../../shared/loading/loading";
@@ -18,7 +18,13 @@ import { ToastContext } from "../../../../context/toastContext";
 import useCancellablePromise from "../../../../api/cancelRequest";
 
 export default function AddressDetailsCard(props) {
-  const { currentActiveStep, setCurrentActiveStep, initLoading, updatedCartItems, updateQuoteBasedOnDeliveryAddress } = props;
+  const {
+    currentActiveStep,
+    setCurrentActiveStep,
+    initLoading,
+    updatedCartItems,
+    updateQuoteBasedOnDeliveryAddress
+  } = props;
 
   // STATES
   const [deliveryAddresses, setDeliveryAddresses] = useState([]);
@@ -71,9 +77,12 @@ export default function AddressDetailsCard(props) {
           getCall("/clientApis/v1/delivery_address")
         );
         if (deliveryAddress) {
-          const findIndex = data.findIndex((item) => item.id === deliveryAddress.id);
+          const findIndex = data.findIndex(
+            (item) => item.id === deliveryAddress.id
+          );
           data.unshift(data.splice(findIndex, 1)[0]);
-        } else { }
+        } else {
+        }
         setDeliveryAddresses(data);
       } catch (err) {
         if (err.response.data.length > 0) {
@@ -85,8 +94,8 @@ export default function AddressDetailsCard(props) {
           payload: {
             id: Math.floor(Math.random() * 100),
             type: toast_types.error,
-            message: err?.message,
-          },
+            message: err?.message
+          }
         });
       } finally {
         setFetchDeliveryAddressLoading(false);
@@ -106,8 +115,8 @@ export default function AddressDetailsCard(props) {
         email: descriptor?.email || "",
         phone: descriptor?.phone || "",
         location: {
-          address,
-        },
+          address
+        }
       };
 
       setDeliveryAddress(formattedUpdatedAddress);
@@ -134,8 +143,8 @@ export default function AddressDetailsCard(props) {
           payload: {
             id: Math.floor(Math.random() * 100),
             type: toast_types.error,
-            message: err?.message,
-          },
+            message: err?.message
+          }
         });
       } finally {
         setFetchBillingAddressLoading(false);
@@ -159,21 +168,22 @@ export default function AddressDetailsCard(props) {
   return (
     <div className={styles.price_summary_card}>
       <div
-        className={`${isStepCompleted()
-          ? styles.step_completed_card_header
-          : styles.card_header
-          }`}
+        className={`${
+          isStepCompleted()
+            ? styles.step_completed_card_header
+            : styles.card_header
+        }`}
         style={
           isCurrentStep()
             ? {
-              borderBottom: `1px solid ${ONDC_COLORS.BACKGROUNDCOLOR}`,
-              borderBottomRightRadius: 0,
-              borderBottomLeftRadius: 0,
-            }
+                borderBottom: `1px solid ${ONDC_COLORS.BACKGROUNDCOLOR}`,
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0
+              }
             : {
-              borderBottomRightRadius: "10px",
-              borderBottomLeftRadius: "10px",
-            }
+                borderBottomRightRadius: "10px",
+                borderBottomLeftRadius: "10px"
+              }
         }
       >
         <div className="d-flex align-items-center">
@@ -239,7 +249,9 @@ export default function AddressDetailsCard(props) {
               <DeliveryAddress
                 deliveryAddresses={deliveryAddresses}
                 setDeliveryAddresses={(value) => setDeliveryAddresses(value)}
-                updateQuoteBasedOnDeliveryAddress={updateQuoteBasedOnDeliveryAddress}
+                updateQuoteBasedOnDeliveryAddress={
+                  updateQuoteBasedOnDeliveryAddress
+                }
               />
             )}
             <hr style={{ background: ONDC_COLORS.SECONDARYCOLOR }} />
@@ -256,7 +268,11 @@ export default function AddressDetailsCard(props) {
             className={`${styles.card_footer} d-flex align-items-center justify-content-center`}
           >
             <Button
-              disabled={!deliveryAddress || !billingAddress || updatedCartItems.length === 0}
+              disabled={
+                !deliveryAddress ||
+                !billingAddress ||
+                updatedCartItems.length === 0
+              }
               button_type={buttonTypes.primary}
               button_hover_type={buttonTypes.primary_hover}
               button_text="Proceed"

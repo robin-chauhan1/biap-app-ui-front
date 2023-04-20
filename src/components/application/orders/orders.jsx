@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useContext,
+  useContext
 } from "react";
 import styles from "../../../styles/orders/orders.module.scss";
 import Navbar from "../../shared/navbar/navbar";
@@ -19,7 +19,7 @@ import Pagination from "../../shared/pagination/pagination";
 import { toast_actions, toast_types } from "../../shared/toast/utils/toast";
 import { ToastContext } from "../../../context/toastContext";
 import useCancellablePromise from "../../../api/cancelRequest";
-
+import data from "../../../data.json";
 export default function Orders() {
   // HISTORY
   const history = useHistory();
@@ -30,7 +30,7 @@ export default function Orders() {
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalCount: 0,
-    postPerPage: 10,
+    postPerPage: 10
   });
   const [currentSelectedAccordion, setCurrentSelectedAccordion] = useState("");
 
@@ -43,11 +43,7 @@ export default function Orders() {
   const getAllOrders = useCallback(async () => {
     setFetchOrderLoading(true);
     try {
-      const { totalCount, orders } = await cancellablePromise(
-        getCall(
-          `/clientApis/v1/orders?pageNumber=${pagination.currentPage}&limit=${pagination.postPerPage}`
-        )
-      );
+      const { totalCount, orders } = data;
       const formated_orders = orders.map((order) => {
         const {
           quote,
@@ -58,12 +54,17 @@ export default function Orders() {
           billing,
           createdAt,
           bppId,
-          items,
+          items
         } = order;
         return {
           product: items?.map(({ id }, index) => {
-            let findQuote = quote?.breakup.find((item) => item["@ondc/org/item_id"] === id && item["@ondc/org/title_type"] === "item");
-            if (findQuote) { } else {
+            let findQuote = quote?.breakup.find(
+              (item) =>
+                item["@ondc/org/item_id"] === id &&
+                item["@ondc/org/title_type"] === "item"
+            );
+            if (findQuote) {
+            } else {
               findQuote = quote?.breakup[index];
             }
             return {
@@ -72,11 +73,13 @@ export default function Orders() {
               cancellation_status: items?.[index]?.cancellation_status ?? "",
               return_status: items?.[index]?.return_status ?? "",
               fulfillment_status: items?.[index]?.fulfillment_status ?? "",
-              ...items?.[index]?.product,
+              ...items?.[index]?.product
             };
           }),
           quote: {
-            breakup: quote?.breakup.filter((item) => item["@ondc/org/title_type"] !== "item"),
+            breakup: quote?.breakup.filter(
+              (item) => item["@ondc/org/title_type"] !== "item"
+            ),
             price: quote?.price
           },
           quantity: items?.map(({ quantity }) => quantity),
@@ -84,24 +87,24 @@ export default function Orders() {
             name: billing?.name,
             email: billing?.email,
             phone: billing?.phone,
-            location: billing?.address,
+            location: billing?.address
           },
           delivery_address: {
             name: fulfillments?.[0]?.end?.location?.address?.name,
             email: fulfillments?.[0]?.end?.contact?.email,
             phone: fulfillments?.[0]?.end?.contact?.phone,
-            location: fulfillments?.[0]?.end?.location?.address,
+            location: fulfillments?.[0]?.end?.location?.address
           },
           status: state,
           order_id: id,
           transaction_id: transactionId,
           createdAt,
-          bpp_id: bppId,
+          bpp_id: bppId
         };
       });
       setPagination((prev) => ({
         ...prev,
-        totalCount,
+        totalCount
       }));
       setOrders(formated_orders);
       setFetchOrderLoading(false);
@@ -111,8 +114,8 @@ export default function Orders() {
         payload: {
           id: Math.floor(Math.random() * 100),
           type: toast_types.error,
-          message: "Something went wrong!",
-        },
+          message: "Something went wrong!"
+        }
       });
       setFetchOrderLoading(false);
     }
@@ -166,7 +169,6 @@ export default function Orders() {
 
   return (
     <Fragment>
-      <Navbar />
       {fetchOrderLoading ? (
         loadingSpin
       ) : orders.length <= 0 ? (
@@ -221,8 +223,8 @@ export default function Orders() {
                               payload: {
                                 id: Math.floor(Math.random() * 100),
                                 type: toast_types.success,
-                                message: "Order status updated successfully!",
-                              },
+                                message: "Order status updated successfully!"
+                              }
                             });
                             getAllOrders();
                           }}
@@ -257,7 +259,7 @@ export default function Orders() {
               onPageChange={(page) => {
                 setPagination((prev) => ({
                   ...prev,
-                  currentPage: page,
+                  currentPage: page
                 }));
                 setCurrentSelectedAccordion("");
               }}

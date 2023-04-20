@@ -1,0 +1,28 @@
+@import "../../assets/scss/variables.scss";
+
+.issues_main_wrapper {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.issue_label {
+  width: 1200px;
+  font-family: $firaSans;
+  font-size: $font-20;
+  font-weight: $medium;
+  text-align: left;
+  color: $primaryColor;
+  margin: 0;
+}
+.issue_title {
+  font-family: $firaSans;
+  font-size: $font-18;
+  font-weight: $medium;
+  text-align: left;
+  color: $primaryColor;
+  margin: 0;
+}
+.seller_label th {
+  border-left: 1px solid grey;
+}

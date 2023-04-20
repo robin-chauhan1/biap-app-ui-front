@@ -11,6 +11,7 @@ import Profile from "./profile/profile";
 import Support from "./support/support";
 import ProductDetails from "./product-list/product-details/productDetails";
 import InitializeOrder from "./initialize-order/initializeOrder";
+import Issues from "./issues/issuesTable";
 
 export default function Application() {
   return (
@@ -22,30 +23,33 @@ export default function Application() {
             exact
             component={() => <Redirect to={"/application/products"} />}
           />
-          <PrivateRoute path={"/application/products/:id"}>
+          <Route path={"/application/products/:id"}>
             <ProductDetails />
-          </PrivateRoute>
-          <PrivateRoute path={"/application/products"}>
+          </Route>
+          <Route path={"/application/products"}>
             <ProductList />
-          </PrivateRoute>
-          <PrivateRoute path={"/application/cart"}>
+          </Route>
+          <Route path={"/application/cart"}>
             <Cart />
-          </PrivateRoute>
-          <PrivateRoute path={"/application/orders"}>
+          </Route>
+          <Route path={"/application/orders"}>
             <Orders />
-          </PrivateRoute>
-          <PrivateRoute path={"/application/profile"}>
+          </Route>
+          <Route path={"/application/profile"}>
             <Profile />
-          </PrivateRoute>
-          <PrivateRoute path={"/application/support"}>
+          </Route>
+          <Route path={"/application/support"}>
             <Support />
-          </PrivateRoute>
-          <PrivateRoute path={"/application/initialize"}>
+          </Route>
+          <Route path={"/application/issues"}>
+            <Issues />
+          </Route>
+          <Route path={"/application/initialize"}>
             <InitializeOrder />
-          </PrivateRoute>
-          <PrivateRoute path={"/application/checkout"}>
+          </Route>
+          <Route path={"/application/checkout"}>
             <Checkout />
-          </PrivateRoute>
+          </Route>
         </AddressContextProvider>
       </Switch>
     </CartContextProvider>
