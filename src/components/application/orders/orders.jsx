@@ -19,7 +19,7 @@ import Pagination from "../../shared/pagination/pagination";
 import { toast_actions, toast_types } from "../../shared/toast/utils/toast";
 import { ToastContext } from "../../../context/toastContext";
 import useCancellablePromise from "../../../api/cancelRequest";
-
+import data from "../../../data.json";
 export default function Orders() {
   // HISTORY
   const history = useHistory();
@@ -43,11 +43,7 @@ export default function Orders() {
   const getAllOrders = useCallback(async () => {
     setFetchOrderLoading(true);
     try {
-      const { totalCount, orders } = await cancellablePromise(
-        getCall(
-          `/clientApis/v1/orders?pageNumber=${pagination.currentPage}&limit=${pagination.postPerPage}`
-        )
-      );
+      const { totalCount, orders } = data;
       const formated_orders = orders.map((order) => {
         const {
           quote,
@@ -62,8 +58,13 @@ export default function Orders() {
         } = order;
         return {
           product: items?.map(({ id }, index) => {
-            let findQuote = quote?.breakup.find((item) => item["@ondc/org/item_id"] === id && item["@ondc/org/title_type"] === "item");
-            if (findQuote) { } else {
+            let findQuote = quote?.breakup.find(
+              (item) =>
+                item["@ondc/org/item_id"] === id &&
+                item["@ondc/org/title_type"] === "item"
+            );
+            if (findQuote) {
+            } else {
               findQuote = quote?.breakup[index];
             }
             return {
@@ -76,8 +77,10 @@ export default function Orders() {
             };
           }),
           quote: {
-            breakup: quote?.breakup.filter((item) => item["@ondc/org/title_type"] !== "item"),
-            price: quote?.price
+            breakup: quote?.breakup.filter(
+              (item) => item["@ondc/org/title_type"] !== "item"
+            ),
+            price: quote?.price,
           },
           quantity: items?.map(({ quantity }) => quantity),
           billing_address: {
@@ -166,7 +169,6 @@ export default function Orders() {
 
   return (
     <Fragment>
-      <Navbar />
       {fetchOrderLoading ? (
         loadingSpin
       ) : orders.length <= 0 ? (
@@ -196,7 +198,7 @@ export default function Orders() {
                       transaction_id,
                       createdAt,
                       bpp_id,
-                      quote
+                      quote,
                     },
                     index
                   ) => {
